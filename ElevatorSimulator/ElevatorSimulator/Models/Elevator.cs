@@ -20,11 +20,11 @@ namespace ElevatorSimulator.Models
         public List<Floor> FloorsToVisit { get; set; } = new List<Floor>();
 
         public int CurrentFloorNr { get; set; }
-        public ElevatorState State { get; set; }
+        public ElevatorState State { get; set; } = ElevatorState.Stopped;
 
         public override string ToString()
         {
-            return $"Elevator:{Id}    Floor: {CurrentFloorNr}    State:{State}   NrOfPeople:{this.GetNrOfPeopleInElevator()}";
+            return $"Elevator:{Id}    Floor: {CurrentFloorNr}   State:{State}   NrOfPeople:{this.GetNrOfPeopleInElevator()}";
         }
 
     }

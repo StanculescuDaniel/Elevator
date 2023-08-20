@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace ElevatorSimulator.Models
+﻿namespace ElevatorSimulator.Models
 {
     public class Floor
     {
@@ -16,5 +13,10 @@ namespace ElevatorSimulator.Models
 
         public int FloorNr { get; set; }
         public List<Person> WaitingPeople { get; set; } = new List<Person>();
+
+        public override string ToString()
+        {
+            return $"FloorNr: {FloorNr}, WaitingPeople: {WaitingPeople.Count}";
+        }
     }
 }

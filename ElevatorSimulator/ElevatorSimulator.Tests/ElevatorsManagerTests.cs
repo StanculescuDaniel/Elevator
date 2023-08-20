@@ -1,20 +1,23 @@
 using ElevatorSimulator.Builders;
+using ElevatorSimulator.Interface;
 using ElevatorSimulator.Models;
 
 namespace ElevatorSimulator.Tests
 {
     public class ElevatorsManagerTests
     {
+        private IOutputProvider _output;
         [SetUp]
         public void Setup()
         {
+            _output = new ConsoleOutputProvider();
         }
 
         [Test, TestCaseSource(nameof(GetTestCaseSource))]
         public void TestAssignBestElevatorToPerson(Floor[] floors, Elevator[] elevators, Person person, Elevator expectedAssignedElevator)
         {
             //Arrange
-            var elevatorHandlers = ElevatorHandlerBuilder.Build(elevators, floors);
+            var elevatorHandlers = new ElevatorHandlerBuilder(_output, floors).Build(elevators);
             var elevatorsManager = new ElevatorsManager(elevatorHandlers, floors);
 
             //Act

@@ -1,20 +1,24 @@
 ﻿using ElevatorSimulator.Handlers;
+using ElevatorSimulator.Interface;
 using ElevatorSimulator.Models;
 
 namespace ElevatorSimulator.Tests
 {
     public class ElevatorHandlerTests
     {
+        private IOutputProvider _output;
+
         [SetUp]
         public void Setup()
         {
+            _output = new ConsoleOutputProvider();
         }
 
         [Test, TestCaseSource(nameof(GetTestCaseSource))]
         public void TestAddPersonToPick(Floor[] floors, Elevator elevator, Person person, List<Floor> expetedFloorsToVisit)
         {
             //Arrage
-            var handler = new ElevatorHandler(elevator, floors);
+            var handler = new ElevatorHandler(elevator, floors, _output);
 
             //Act
             handler.AddPersonToPick(person);

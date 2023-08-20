@@ -1,4 +1,5 @@
-﻿using ElevatorSimulator.Models;
+﻿using ElevatorSimulator.Interface;
+using ElevatorSimulator.Models;
 using System.Text;
 using System.Timers;
 
@@ -9,6 +10,7 @@ namespace ElevatorSimulator.Handlers
         private readonly object _lock = new object();
         private readonly Floor[] _floors;
         private readonly System.Timers.Timer _timer;
+        private readonly IOutputProvider _output;
         public Elevator Elevator { get; private set; }
         public Floor CurrentFloor
         {
@@ -18,48 +20,50 @@ namespace ElevatorSimulator.Handlers
             }
         }
 
-        public ElevatorHandler(Elevator elevator, Floor[] floors)
+        public ElevatorHandler(Elevator elevator, Floor[] floors, IOutputProvider output)
         {
             Elevator = elevator ?? throw new ArgumentNullException("elevator cannot be null");
             _floors = floors ?? throw new ArgumentNullException("floors cannot be null");
+            _output = output ?? throw new ArgumentNullException("output");
 
             _timer = new System.Timers.Timer(1000);
             _timer.Elapsed += OnTimedEvent;
             _timer.AutoReset = true;
             _timer.Enabled = false;
         }
-        
 
         public void AddPersonToPick(Person person)
         {
-            Elevator.PersonsToBePicker.Add(person);
-
-            // elevator has no floors to visit (it's stopped)
-            if (!Elevator.FloorsToVisit.Any())
+            lock (_lock)
             {
-                Elevator.FloorsToVisit.Add(person.StartingFloor);
-                Elevator.FloorsToVisit.Add(person.TargetFloor);
-                Start();
+                Elevator.PersonsToBePicker.Add(person);
 
-                return;
+                // elevator has no floors to visit (it's stopped)
+                if (!Elevator.FloorsToVisit.Any())
+                {
+                    Elevator.FloorsToVisit.Add(person.StartingFloor);
+                    Elevator.FloorsToVisit.Add(person.TargetFloor);
+                    Start();
+
+                    return;
+                }
+
+                var startFloorIndex = Elevator.FloorsToVisit.IndexOf(person.StartingFloor);
+                // starting floor does not exist
+                if (startFloorIndex == -1)
+                {
+                    var insertIndexForStartFloor = FindInsertIndexForFloor(0, person.StartingFloor.FloorNr);
+                    startFloorIndex = insertIndexForStartFloor;
+                    Elevator.FloorsToVisit.Insert(insertIndexForStartFloor, person.StartingFloor);
+                }
+
+                if (!Elevator.FloorsToVisit.Contains(person.TargetFloor))
+                {
+                    // target floor must always be after starting floor
+                    var insertIndexForTargetFloor = FindInsertIndexForFloor(startFloorIndex, person.TargetFloor.FloorNr);
+                    Elevator.FloorsToVisit.Insert(insertIndexForTargetFloor, person.TargetFloor);
+                }
             }
-
-            var startFloorIndex = Elevator.FloorsToVisit.IndexOf(person.StartingFloor);
-            // starting floor does not exist
-            if (startFloorIndex == -1)
-            {
-                var insertIndexForStartFloor = FindInsertIndexForFloor(0, person.StartingFloor.FloorNr);
-                startFloorIndex = insertIndexForStartFloor;
-                Elevator.FloorsToVisit.Insert(insertIndexForStartFloor, person.StartingFloor);
-            }
-
-            if (!Elevator.FloorsToVisit.Contains(person.TargetFloor))
-            {
-                // target floor must always be after starting floor
-                var insertIndexForTargetFloor = FindInsertIndexForFloor(startFloorIndex, person.TargetFloor.FloorNr);
-                Elevator.FloorsToVisit.Insert(insertIndexForTargetFloor, person.TargetFloor);
-            }
-
         }
 
         #region Private
@@ -76,8 +80,11 @@ namespace ElevatorSimulator.Handlers
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             Stop();
-            HandleCurrentFloor();
-            DecideNextState();
+            lock (_lock) 
+            { 
+                HandleCurrentFloor();
+                DecideNextState();
+            }
         }
 
         private void DecideNextState()
@@ -86,6 +93,7 @@ namespace ElevatorSimulator.Handlers
             if (nextFloorToVisit == null)
             {
                 Elevator.State = ElevatorState.Stopped;
+                PrintState();
             }
             else
             {
@@ -126,7 +134,6 @@ namespace ElevatorSimulator.Handlers
                 Elevator.PersonsInElevator.RemoveAll(p => personsToBeDropedAtCurrentFloorByThisElevator.Contains(p));
             }
 
-
             // floor has been visited
             if (Elevator.FloorsToVisit.Any() && CurrentFloor == Elevator.FloorsToVisit.ElementAt(0))
             {
@@ -136,11 +143,9 @@ namespace ElevatorSimulator.Handlers
             this.PrintState(log.ToString());
 
         }
-        private void PrintState(string message)
+        private void PrintState(string message = null)
         {
-            Console.ForegroundColor = Elevator.ConsoleColor;
-            Console.WriteLine($"{Elevator} \t-> {message}");
-            Console.ResetColor();
+            _output.WriteLine($"{Elevator}  {message}", Elevator.ConsoleColor);
         }
 
         private int FindInsertIndexForFloor(int fromIndex,int floorNr)

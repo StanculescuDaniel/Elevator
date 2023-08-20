@@ -8,6 +8,6 @@ namespace ElevatorSimulator.Interface
 {
     public interface IOutputProvider
     {
-        void WriteLine(string message);
+        void WriteLine(string message, ConsoleColor color = ConsoleColor.White);
     }
 }

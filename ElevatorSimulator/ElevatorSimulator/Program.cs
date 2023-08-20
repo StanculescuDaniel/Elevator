@@ -40,31 +40,25 @@ var floors = new Floor[]
 
 var elevatorPool = new Elevator[]
 {
-    new Elevator(floors)
+    new Elevator()
     {
         Id = 0,
         CurrentFloorNr = 1,
-        State = ElevatorDirection.Stopped,
+        State = ElevatorState.Stopped,
         ConsoleColor = ConsoleColor.Green
-    }.Start(),
-    new Elevator(floors)
+    },
+    new Elevator()
     {
         Id = 1,
         CurrentFloorNr = 2,
-        State = ElevatorDirection.Stopped,
+        State = ElevatorState.Stopped,
         ConsoleColor = ConsoleColor.Blue
-    }.Start()
+    }
 };
 
-Console.WriteLine("Elevators------------------------------------------------------------------------------");
-foreach (var unit in elevatorPool)
-{
-    unit.PrintState("Initial State");
-}
-Console.WriteLine("---------------------------------------------------------------------------------------");
 
 var outputProvider = new ConsoleOutputProvider();
-var elevatorsManager = new ElevatorsManager(ElevatorHandlerBuilder.Build(elevatorPool), floors);
+var elevatorsManager = new ElevatorsManager(ElevatorHandlerBuilder.Build(elevatorPool, floors), floors);
 
 var person = new Person
 {

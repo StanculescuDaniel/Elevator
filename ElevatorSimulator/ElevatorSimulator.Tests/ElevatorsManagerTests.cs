@@ -14,7 +14,7 @@ namespace ElevatorSimulator.Tests
         public void TestAssignBestElevatorToPerson(Floor[] floors, Elevator[] elevators, Person person, Elevator expectedAssignedElevator)
         {
             //Arrange
-            var elevatorHandlers = ElevatorHandlerBuilder.Build(elevators);
+            var elevatorHandlers = ElevatorHandlerBuilder.Build(elevators, floors);
             var elevatorsManager = new ElevatorsManager(elevatorHandlers, floors);
 
             //Act
@@ -65,25 +65,25 @@ namespace ElevatorSimulator.Tests
         {
             var elevators = new Elevator[]
             {
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 0,
                     CurrentFloorNr = 1,
-                    State = ElevatorDirection.Stopped,
+                    State = ElevatorState.Stopped,
                     ConsoleColor = ConsoleColor.Green
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 1,
                     CurrentFloorNr = 2,
-                    State = ElevatorDirection.Stopped,
+                    State = ElevatorState.Stopped,
                     ConsoleColor = ConsoleColor.Blue
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 2,
                     CurrentFloorNr = 2,
-                    State = ElevatorDirection.Stopped,
+                    State = ElevatorState.Stopped,
                     ConsoleColor = ConsoleColor.Red
                 }
             };
@@ -119,25 +119,25 @@ namespace ElevatorSimulator.Tests
         {
             var elevators = new Elevator[]
             {
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 0,
                     CurrentFloorNr = 4,
-                    State = ElevatorDirection.Stopped,
+                    State = ElevatorState.Stopped,
                     ConsoleColor = ConsoleColor.Green
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 1,
                     CurrentFloorNr = 3,
-                    State = ElevatorDirection.Stopped,
+                    State = ElevatorState.Stopped,
                     ConsoleColor = ConsoleColor.Blue
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 2,
                     CurrentFloorNr = 2,
-                    State = ElevatorDirection.Stopped,
+                    State = ElevatorState.Stopped,
                     ConsoleColor = ConsoleColor.Red
                 }
             };
@@ -173,25 +173,25 @@ namespace ElevatorSimulator.Tests
         {
             var elevators = new Elevator[]
             {
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 0,
                     CurrentFloorNr = 0,
-                    State = ElevatorDirection.MovingUp,
+                    State = ElevatorState.MovingUp,
                     ConsoleColor = ConsoleColor.Green
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 1,
                     CurrentFloorNr = 1,
-                    State = ElevatorDirection.MovingUp,
+                    State = ElevatorState.MovingUp,
                     ConsoleColor = ConsoleColor.Blue
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 2,
                     CurrentFloorNr = 2,
-                    State = ElevatorDirection.MovingDown,
+                    State = ElevatorState.MovingDown,
                     ConsoleColor = ConsoleColor.Red
                 }
             };
@@ -227,11 +227,11 @@ namespace ElevatorSimulator.Tests
         {
             var elevators = new Elevator[]
             {
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 0,
                     CurrentFloorNr = 1,
-                    State = ElevatorDirection.MovingUp,
+                    State = ElevatorState.MovingUp,
                     ConsoleColor = ConsoleColor.Green,
                     FloorsToVisit = new List<Floor>
                     {
@@ -239,22 +239,22 @@ namespace ElevatorSimulator.Tests
                     }
 
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 1,
                     CurrentFloorNr = 2,
-                    State = ElevatorDirection.MovingUp,
+                    State = ElevatorState.MovingUp,
                     ConsoleColor = ConsoleColor.Blue,
                     FloorsToVisit = new List<Floor>
                     {
                         floors[3], floors[5]
                     }
                 },
-                new Elevator(floors)
+                new Elevator()
                 {
                     Id = 2,
                     CurrentFloorNr = 3,
-                    State = ElevatorDirection.MovingUp,
+                    State = ElevatorState.MovingUp,
                     ConsoleColor = ConsoleColor.Red,
                     FloorsToVisit = new List<Floor>
                     {

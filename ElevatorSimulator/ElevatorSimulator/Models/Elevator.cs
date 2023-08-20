@@ -4,9 +4,11 @@ using System.Timers;
 
 namespace ElevatorSimulator.Models
 {
-    public enum ElevatorDirection
+    public enum ElevatorState
     {
-        MovingUp, MovingDown, Stopped
+        MovingUp, 
+        MovingDown, 
+        Stopped
     }
 
     public class Elevator
@@ -17,115 +19,12 @@ namespace ElevatorSimulator.Models
         public List<Person> PersonsToBePicker { get; set; } = new List<Person>();
         public List<Floor> FloorsToVisit { get; set; } = new List<Floor>();
 
-        public Floor CurrentFloor {
-
-            get
-            {
-                return _floors.First(p => p.FloorNr == CurrentFloorNr);
-            } 
-        }
         public int CurrentFloorNr { get; set; }
-        public ElevatorDirection State { get; set; }
+        public ElevatorState State { get; set; }
 
         public override string ToString()
         {
             return $"Elevator:{Id}    Floor: {CurrentFloorNr}    State:{State}   NrOfPeople:{this.GetNrOfPeopleInElevator()}";
-        }
-
-        private readonly System.Timers.Timer _timer;
-        private readonly Floor[] _floors;
-
-        public Elevator(Floor[] floors)
-        {
-            _floors = floors;
-            _timer = new System.Timers.Timer(1000);
-            _timer.Elapsed += OnTimedEvent;
-            _timer.AutoReset = true;
-            _timer.Enabled = false;
-        }
-
-        public Elevator Start()
-        {
-            _timer.Enabled = true;
-            return this;
-        }
-
-        public void Stop()
-        {
-            _timer.Enabled = false;
-        }
-       
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
-        {
-            Stop();
-            
-            // handle current floor
-            var log = new StringBuilder();
-            HandleCurrentFloor(log);
-            this.PrintState(log.ToString());
-
-            var nextFloorToVisit = FloorsToVisit.FirstOrDefault();
-            if (nextFloorToVisit == null)
-            {
-                State = ElevatorDirection.Stopped;
-            }
-            else
-            {
-                if (CurrentFloorNr < nextFloorToVisit.FloorNr)
-                {
-                    this.MoveUp();
-                }
-                else
-                {
-                    this.MoveDown();
-                }
-                
-                Start();
-            }
-        }
-
-        private void HandleCurrentFloor(StringBuilder log)
-        {
-            //take people from floor
-            var personsToBePickerFromCurrentFloorByThisElevator = PersonsToBePicker.Where(p => p.StartingFloor == CurrentFloor);
-            if (personsToBePickerFromCurrentFloorByThisElevator.Any())
-            {
-                log.Append($"- Getting {personsToBePickerFromCurrentFloorByThisElevator.Count()} persons from floor {CurrentFloorNr}");
-                //insert them to elevator
-                PersonsInElevator.AddRange(personsToBePickerFromCurrentFloorByThisElevator);
-                //remove persons from the floor
-                CurrentFloor.WaitingPeople.RemoveAll(p => personsToBePickerFromCurrentFloorByThisElevator.Contains(p));
-                PersonsToBePicker.RemoveAll(p => personsToBePickerFromCurrentFloorByThisElevator.Contains(p));
-            }
-
-            //drop people at current floor
-            var personsToBeDropedAtCurrentFloorByThisElevator = PersonsInElevator.Where(p => p.TargetFloor == CurrentFloor);
-            if (personsToBeDropedAtCurrentFloorByThisElevator.Any())
-            {
-                log.Append($"- Dropping {personsToBeDropedAtCurrentFloorByThisElevator.Count()} persons at floor {CurrentFloorNr}");
-                //remove persons from elevator
-                PersonsInElevator.RemoveAll(p => personsToBeDropedAtCurrentFloorByThisElevator.Contains(p));
-            }
-
-
-            // floor has been visited
-            if (FloorsToVisit.Any() && CurrentFloor == FloorsToVisit.ElementAt(0))
-            {
-                FloorsToVisit.RemoveAt(0);
-            }
-
-        }
-
-        private string ListToString<T>(IEnumerable<T> list)
-        {
-            var stringBuilder = new StringBuilder();
-            foreach (var item in list)
-            {
-                stringBuilder.Append(item);
-                stringBuilder.Append(",");
-            }
-
-            return stringBuilder.ToString();
         }
 
     }
@@ -135,7 +34,7 @@ namespace ElevatorSimulator.Models
     {
         public static bool IsMoving(this Elevator elevator)
         {
-            return elevator.State != ElevatorDirection.Stopped;
+            return elevator.State != ElevatorState.Stopped;
         }
         public static int GetNrOfPeopleInElevator(this Elevator elevator)
         {
@@ -152,11 +51,6 @@ namespace ElevatorSimulator.Models
             return unit.FloorsToVisit.LastOrDefault();
         }
 
-        public static int[] GetFloorNrsToVisit(this Elevator unit)
-        {
-            return unit.FloorsToVisit.Select(f => f.FloorNr).ToArray();
-        }
-
         public static Floor? GetNextFloorToStop(this Elevator unit)
         {
             var floorsToStopToDropPersons = unit.PersonsInElevator.Select(p => p.TargetFloor);
@@ -169,44 +63,18 @@ namespace ElevatorSimulator.Models
         public static void MoveUp(this Elevator unit)
         {
             unit.CurrentFloorNr++;
-            unit.State = ElevatorDirection.MovingUp;
+            unit.State = ElevatorState.MovingUp;
         }
 
         public static void MoveDown(this Elevator unit)
         {
             unit.CurrentFloorNr--;
-            unit.State = ElevatorDirection.MovingDown;
+            unit.State = ElevatorState.MovingDown;
         }
 
         public static void Stop(this Elevator unit)
         {
-            unit.State = ElevatorDirection.Stopped;
-        }
-
-        public static void MoveToFloor(this Elevator unit, int targetFloor)
-        {
-            if(targetFloor > unit.CurrentFloorNr)
-            {
-                unit.State = ElevatorDirection.MovingUp;
-            }
-            else
-            {
-                unit.State = ElevatorDirection.MovingDown;
-            }
-            //unit.TargetFloor = targetFloor;
-            unit.PrintState($"Moving to target floor {targetFloor}");
-            Thread.Sleep(1000);
-            unit.CurrentFloorNr = targetFloor;
-            unit.State = ElevatorDirection.Stopped;
-            //unit.TargetFloor = -1;
-            unit.PrintState($"Arrived at target floor {targetFloor}");
-        }
-        
-        public static void PrintState(this Elevator unit, string message)
-        {
-            Console.ForegroundColor = unit.ConsoleColor;
-            Console.WriteLine($"{unit} \t-> {message}");
-            Console.ResetColor();
+            unit.State = ElevatorState.Stopped;
         }
 
         public static void Print(this Elevator unit, string message)

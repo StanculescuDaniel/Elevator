@@ -32,6 +32,7 @@ namespace ElevatorSimulator
             var bestElevatorHandler = GetBestElevatorHandler(person);
             bestElevatorHandler.AddPersonToPick(person);
             person.AssignedElevator = bestElevatorHandler.Elevator;
+            bestElevatorHandler.Start();
         }
 
         private ElevatorHandler GetBestElevatorHandler(Person person)
@@ -39,20 +40,20 @@ namespace ElevatorSimulator
             var startingFloorNr = person.StartingFloor.FloorNr;
             var targetFloorNr = person.TargetFloor.FloorNr; 
 
-            var stoppedElevators = _elevatorHandlers.Where(u => !u.IsMoving());
+            var stoppedElevators = _elevatorHandlers.Where(u => !u.Elevator.IsMoving());
             // stopped elevators case
             if (stoppedElevators.Any())
             {
                 return GetClosestElevatorUnit(stoppedElevators, startingFloorNr);
             }
 
-            var movingElevators = _elevatorHandlers.Where(u => u.IsMoving());
+            var movingElevators = _elevatorHandlers.Where(u => u.Elevator.IsMoving());
 
             // elevators which are moving in the correct direction - choose the closest one
             var eligibleMovingElevators = movingElevators
                 .Where(e =>
-                           (person.WantsToGoUp() && e.Elevator.CurrentFloorNr < startingFloorNr && e.Elevator.State == ElevatorDirection.MovingUp) ||
-                           (person.WantsToGoDown() && e.Elevator.CurrentFloorNr > startingFloorNr && e.Elevator.State == ElevatorDirection.MovingDown));
+                           (person.WantsToGoUp() && e.Elevator.CurrentFloorNr < startingFloorNr && e.Elevator.State == ElevatorState.MovingUp) ||
+                           (person.WantsToGoDown() && e.Elevator.CurrentFloorNr > startingFloorNr && e.Elevator.State == ElevatorState.MovingDown));
 
             
             if (eligibleMovingElevators.Any())

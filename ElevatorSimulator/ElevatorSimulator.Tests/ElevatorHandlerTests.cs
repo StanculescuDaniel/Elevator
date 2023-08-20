@@ -11,28 +11,16 @@ namespace ElevatorSimulator.Tests
         }
 
         [Test, TestCaseSource(nameof(GetTestCaseSource))]
-        public void TestAddPersonToPick(Elevator elevator, Person person, List<Floor> expetedFloorsToVisit)
+        public void TestAddPersonToPick(Floor[] floors, Elevator elevator, Person person, List<Floor> expetedFloorsToVisit)
         {
             //Arrage
-            var handler = new ElevatorHandler(elevator);
+            var handler = new ElevatorHandler(elevator, floors);
 
             //Act
             handler.AddPersonToPick(person);
 
             //Assert
             Assert.IsTrue(elevator.FloorsToVisit.SequenceEqual(expetedFloorsToVisit));
-        }
-
-        private static bool CompareTwoFloorLists(List<Floor> firstArray, List<Floor> secondArray)
-        {
-            if (firstArray.Count != secondArray.Count)
-                return false;
-            for (int i = 0; i < firstArray.Count; i++)
-            {
-                if (firstArray[i].FloorNr != secondArray[i].FloorNr)
-                    return false;
-            }
-            return true;
         }
 
         #region TestCaseData
@@ -65,10 +53,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorStoppedTestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 1,
-                State = ElevatorDirection.Stopped,
+                State = ElevatorState.Stopped,
             };
 
             var person = new Person
@@ -83,7 +71,7 @@ namespace ElevatorSimulator.Tests
                 floors[5],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is stopped add starting and target floors in FloorsToVisit list"
             };
@@ -91,10 +79,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingUpTestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 1,
-                State = ElevatorDirection.MovingUp,
+                State = ElevatorState.MovingUp,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[2],
@@ -116,7 +104,7 @@ namespace ElevatorSimulator.Tests
                 floors[5],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving up add the starting and target floor at the correct index in FloorsToVisit list"
             };
@@ -124,10 +112,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingUpStartingFloorAlreadyExistsTestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 0,
-                State = ElevatorDirection.MovingUp,
+                State = ElevatorState.MovingUp,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[1],
@@ -150,7 +138,7 @@ namespace ElevatorSimulator.Tests
                 floors[4],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving up and starting floor already exists then add only the target floor at the correct index in FloorsToVisit list"
             };
@@ -158,10 +146,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingUpTargetFloorAlreadyExistsTestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 0,
-                State = ElevatorDirection.MovingDown,
+                State = ElevatorState.MovingDown,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[2],
@@ -184,7 +172,7 @@ namespace ElevatorSimulator.Tests
                 floors[5],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving up and target floor already exists then add only the starting floor at the correct index in FloorsToVisit list"
             };
@@ -192,10 +180,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingDownTestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 5,
-                State = ElevatorDirection.MovingDown,
+                State = ElevatorState.MovingDown,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[5],
@@ -217,7 +205,7 @@ namespace ElevatorSimulator.Tests
                 floors[2],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving down add the starting and target floor at the correct index in FloorsToVisit list"
             };
@@ -225,10 +213,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingDownTargetFloorAlreadyExistsTestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 6,
-                State = ElevatorDirection.MovingDown,
+                State = ElevatorState.MovingDown,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[5],
@@ -251,7 +239,7 @@ namespace ElevatorSimulator.Tests
                 floors[2],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving down and target floor already exists then add only the starting floor at the correct index in FloorsToVisit list"
             };
@@ -259,10 +247,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingDownStartingFloorAlreadyExistsTestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 5,
-                State = ElevatorDirection.MovingDown,
+                State = ElevatorState.MovingDown,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[4],
@@ -285,7 +273,7 @@ namespace ElevatorSimulator.Tests
                 floors[1],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving down and starting floor already exists then add only the target floor at the correct index in FloorsToVisit list"
             };
@@ -293,10 +281,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingUp_PersonWantsToGoDown_StartingAndTargetFloorBellowElevator_TestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 2,
-                State = ElevatorDirection.MovingUp,
+                State = ElevatorState.MovingUp,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[3],
@@ -318,7 +306,7 @@ namespace ElevatorSimulator.Tests
                 floors[0],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving up, person wants to go down but starting and target floor are below the elevator then after the elevator finish with the highest target floor iw will come back to pick person"
             };
@@ -326,10 +314,10 @@ namespace ElevatorSimulator.Tests
 
         private static TestCaseData ElevatorMovingUp_PersonWantsToGoUp_StartingAndTargetFloorBellowElevator_TestCase(Floor[] floors)
         {
-            var elevator = new Elevator(floors)
+            var elevator = new Elevator()
             {
                 CurrentFloorNr = 2,
-                State = ElevatorDirection.MovingUp,
+                State = ElevatorState.MovingUp,
                 FloorsToVisit = new List<Floor>()
                 {
                     floors[3],
@@ -351,7 +339,7 @@ namespace ElevatorSimulator.Tests
                 floors[1],
             };
 
-            return new TestCaseData(elevator, person, expected)
+            return new TestCaseData(floors, elevator, person, expected)
             {
                 TestName = "When elevator is moving up, person wants to go up but starting and target floor are below the elevator then after the elevator finish with the highest target floor iw will come back to pick person"
             };

@@ -1,8 +1,8 @@
-﻿using ElevatorSimulator.Handlers;
-using ElevatorSimulator.Models;
+﻿using ElevatorSimulator.Domain.Handlers;
+using ElevatorSimulator.Domain.Models;
 
 
-namespace ElevatorSimulator
+namespace ElevatorSimulator.Domain
 {
     public class ElevatorsManager
     {
@@ -31,8 +31,8 @@ namespace ElevatorSimulator
 
             var bestElevatorHandler = GetBestElevatorHandler(person);
             bestElevatorHandler.AddPersonToPick(person);
-            person.AssignedElevator = bestElevatorHandler.Elevator;
-            bestElevatorHandler.Start();
+            bestElevatorHandler.StartHandleing();
+            
         }
 
         private ElevatorHandler GetBestElevatorHandler(Person person)

@@ -1,9 +1,9 @@
-﻿using ElevatorSimulator.Interface;
-using ElevatorSimulator.Models;
+﻿using ElevatorSimulator.Domain.Interface;
+using ElevatorSimulator.Domain.Models;
 using System.Text;
 using System.Timers;
 
-namespace ElevatorSimulator.Handlers
+namespace ElevatorSimulator.Domain.Handlers
 {
     public class ElevatorHandler
     {
@@ -11,6 +11,8 @@ namespace ElevatorSimulator.Handlers
         private readonly Floor[] _floors;
         private readonly System.Timers.Timer _timer;
         private readonly IOutputProvider _output;
+        private const int TimerDuration = 1000;
+
         public Elevator Elevator { get; private set; }
         public Floor CurrentFloor
         {
@@ -26,7 +28,7 @@ namespace ElevatorSimulator.Handlers
             _floors = floors ?? throw new ArgumentNullException("floors cannot be null");
             _output = output ?? throw new ArgumentNullException("output");
 
-            _timer = new System.Timers.Timer(1000);
+            _timer = new System.Timers.Timer(TimerDuration);
             _timer.Elapsed += OnTimedEvent;
             _timer.AutoReset = true;
             _timer.Enabled = false;
@@ -37,13 +39,13 @@ namespace ElevatorSimulator.Handlers
             lock (_lock)
             {
                 Elevator.PersonsToBePicker.Add(person);
+                person.AssignedElevator = Elevator;
 
                 // elevator has no floors to visit (it's stopped)
                 if (!Elevator.FloorsToVisit.Any())
                 {
                     Elevator.FloorsToVisit.Add(person.StartingFloor);
                     Elevator.FloorsToVisit.Add(person.TargetFloor);
-                    Start();
 
                     return;
                 }
@@ -67,9 +69,13 @@ namespace ElevatorSimulator.Handlers
         }
 
         #region Private
-        public void Start()
+        public void StartHandleing()
         {
-            _timer.Enabled = true;
+            if (!_timer.Enabled)
+            {
+                HandleCurrentFloorAndDecideNextState();
+            }
+            
         }
 
         public void Stop()
@@ -79,9 +85,14 @@ namespace ElevatorSimulator.Handlers
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            Stop();
-            lock (_lock) 
-            { 
+            HandleCurrentFloorAndDecideNextState();
+        }
+
+        private void HandleCurrentFloorAndDecideNextState()
+        {
+            _timer.Enabled = false;
+            lock (_lock)
+            {
                 HandleCurrentFloor();
                 DecideNextState();
             }
@@ -106,7 +117,7 @@ namespace ElevatorSimulator.Handlers
                     Elevator.MoveDown();
                 }
 
-                Start();
+                _timer.Enabled = true;
             }
         }
 

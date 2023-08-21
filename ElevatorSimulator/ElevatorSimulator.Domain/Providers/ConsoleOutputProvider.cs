@@ -1,8 +1,8 @@
-﻿using ElevatorSimulator.Interface;
+﻿using ElevatorSimulator.Domain.Interface;
 
-namespace ElevatorSimulator
+namespace ElevatorSimulator.Domain.Providers
 {
-    public class ConsoleOutputProvider: IOutputProvider
+    public class ConsoleOutputProvider : IOutputProvider
     {
         private readonly object _lock = new();
         public void WriteLine(string message, ConsoleColor color = ConsoleColor.White)

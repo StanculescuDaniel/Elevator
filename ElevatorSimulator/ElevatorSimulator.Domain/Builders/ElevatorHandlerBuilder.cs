@@ -1,8 +1,8 @@
-﻿using ElevatorSimulator.Handlers;
-using ElevatorSimulator.Interface;
-using ElevatorSimulator.Models;
+﻿using ElevatorSimulator.Domain.Handlers;
+using ElevatorSimulator.Domain.Interface;
+using ElevatorSimulator.Domain.Models;
 
-namespace ElevatorSimulator.Builders
+namespace ElevatorSimulator.Domain.Builders
 {
     public class ElevatorHandlerBuilder
     {

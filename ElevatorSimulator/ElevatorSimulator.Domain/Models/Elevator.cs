@@ -2,7 +2,7 @@
 using System.Text;
 using System.Timers;
 
-namespace ElevatorSimulator.Models
+namespace ElevatorSimulator.Domain.Models
 {
     public enum ElevatorState
     {
@@ -71,18 +71,5 @@ namespace ElevatorSimulator.Models
             unit.CurrentFloorNr--;
             unit.State = ElevatorState.MovingDown;
         }
-
-        public static void Stop(this Elevator unit)
-        {
-            unit.State = ElevatorState.Stopped;
-        }
-
-        public static void Print(this Elevator unit, string message)
-        {
-            Console.ForegroundColor = unit.ConsoleColor;
-            Console.WriteLine($"{unit} \t-> {message}");
-            Console.ResetColor();
-        }
-
     }
 }

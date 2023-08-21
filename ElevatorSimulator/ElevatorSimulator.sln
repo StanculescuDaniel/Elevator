@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator", "ElevatorSimulator\ElevatorSimulator.csproj", "{9D9E54A1-5086-4002-803A-8045112B10A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.Console", "ElevatorSimulator\ElevatorSimulator.Console.csproj", "{9D9E54A1-5086-4002-803A-8045112B10A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.Tests", "ElevatorSimulator.Tests\ElevatorSimulator.Tests.csproj", "{CA1861EC-C940-4EDC-AA14-BCEC7053623B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.Domain.Tests", "ElevatorSimulator.Tests\ElevatorSimulator.Domain.Tests.csproj", "{CA1861EC-C940-4EDC-AA14-BCEC7053623B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.Domain", "ElevatorSimulator.Domain\ElevatorSimulator.Domain.csproj", "{B7C7510A-B1A1-411A-9891-DE795B92F4CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CA1861EC-C940-4EDC-AA14-BCEC7053623B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA1861EC-C940-4EDC-AA14-BCEC7053623B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA1861EC-C940-4EDC-AA14-BCEC7053623B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C7510A-B1A1-411A-9891-DE795B92F4CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C7510A-B1A1-411A-9891-DE795B92F4CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C7510A-B1A1-411A-9891-DE795B92F4CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C7510A-B1A1-411A-9891-DE795B92F4CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

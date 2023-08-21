@@ -1,8 +1,9 @@
-using ElevatorSimulator.Builders;
-using ElevatorSimulator.Interface;
-using ElevatorSimulator.Models;
+using ElevatorSimulator.Domain.Builders;
+using ElevatorSimulator.Domain.Interface;
+using ElevatorSimulator.Domain.Models;
+using ElevatorSimulator.Domain.Providers;
 
-namespace ElevatorSimulator.Tests
+namespace ElevatorSimulator.Domain.Tests
 {
     public class ElevatorsManagerTests
     {

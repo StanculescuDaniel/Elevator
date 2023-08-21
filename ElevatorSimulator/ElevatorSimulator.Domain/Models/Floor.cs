@@ -1,4 +1,4 @@
-﻿namespace ElevatorSimulator.Models
+﻿namespace ElevatorSimulator.Domain.Models
 {
     public class Floor
     {

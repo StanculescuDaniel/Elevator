@@ -1,8 +1,9 @@
-﻿using ElevatorSimulator.Handlers;
-using ElevatorSimulator.Interface;
-using ElevatorSimulator.Models;
+﻿using ElevatorSimulator.Domain.Handlers;
+using ElevatorSimulator.Domain.Interface;
+using ElevatorSimulator.Domain.Models;
+using ElevatorSimulator.Domain.Providers;
 
-namespace ElevatorSimulator.Tests
+namespace ElevatorSimulator.Domain.Tests
 {
     public class ElevatorHandlerTests
     {
@@ -14,7 +15,7 @@ namespace ElevatorSimulator.Tests
             _output = new ConsoleOutputProvider();
         }
 
-        [Test, TestCaseSource(nameof(GetTestCaseSource))]
+        [Test, TestCaseSource(nameof(GetAddPersonToPickTestCaseSource))]
         public void TestAddPersonToPick(Floor[] floors, Elevator elevator, Person person, List<Floor> expetedFloorsToVisit)
         {
             //Arrage
@@ -27,8 +28,8 @@ namespace ElevatorSimulator.Tests
             Assert.IsTrue(elevator.FloorsToVisit.SequenceEqual(expetedFloorsToVisit));
         }
 
-        #region TestCaseData
-        private static IEnumerable<TestCaseData> GetTestCaseSource()
+        #region AddPersonToPickTestCaseSource
+        private static IEnumerable<TestCaseData> GetAddPersonToPickTestCaseSource()
         {
             var floors = new Floor[]
             {
@@ -351,6 +352,8 @@ namespace ElevatorSimulator.Tests
 
 
         #endregion 
+
+
 
     }
 }

@@ -18,21 +18,18 @@ namespace ElevatorSimulator.Logic.Models
         public List<Person> PersonsInElevator { get; set; } = new List<Person>();
         public List<Person> PersonsToBePicker { get; set; } = new List<Person>();
         public List<Floor> FloorsToVisit { get; set; } = new List<Floor>();
-
+        public int MaxCapacity { get; set; } = 10;
         public int CurrentFloorNr { get; set; }
         public ElevatorState State { get; set; } = ElevatorState.Stopped;
 
         public override string ToString()
         {
-            return $"Elevator:{Id}    Floor: {CurrentFloorNr}   State:{State}   NrOfPeople:{this.GetNrOfPeopleInElevator()}";
+            return $"Elevator:{Id}    Floor: {CurrentFloorNr}   State:{State}   NrOfPeople:'{this.GetNrOfPeopleInElevator()}' FreeSpots:'{this.GetFreeSpots()}' FloorsToVisit:{this.GetFloorsToVisitString()}";
         }
-
     }
-
 
     public static class ElevatorExtensions
     {
-
         private static ConsoleColor[] Colors = new ConsoleColor[]
         {
             ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.Yellow
@@ -55,9 +52,25 @@ namespace ElevatorSimulator.Logic.Models
             return elevator.PersonsInElevator.Count();
         }
 
+        public static int GetFreeSpots(this Elevator elevator)
+        {
+            return elevator.MaxCapacity - elevator.GetNrOfPeopleInElevator();
+        }
+
+        public static bool IsFull(this Elevator elevator)
+        {
+            return elevator.GetFreeSpots() == 0;
+        }
+
         public static Floor? GetNextFloorToVisit(this Elevator elevator)
         {
             return elevator.FloorsToVisit.FirstOrDefault();
+        }
+
+        public static string GetFloorsToVisitString(this Elevator elevator)
+        {
+            var floorsToVisit = elevator.FloorsToVisit.Select(p => p.FloorNr).ToArray();
+            return string.Join(',', floorsToVisit);
         }
 
         public static Floor? GetLastFloorToVisit(this Elevator elevator)

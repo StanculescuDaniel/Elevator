@@ -5,9 +5,9 @@ using ElevatorSimulator.Logic.Builders;
 using ElevatorSimulator.Logic.Models;
 using ElevatorSimulator.Providers;
 
-var runWithCOnsoleInput = true;
+var runWithConsoleInput = true;
 
-if (runWithCOnsoleInput)
+if (runWithConsoleInput)
 {
     RunWithConsoleInput();
 }

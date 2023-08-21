@@ -1,7 +1,6 @@
 ﻿using ElevatorSimulator.Logic.Handlers;
 using ElevatorSimulator.Logic.Models;
 
-
 namespace ElevatorSimulator.Logic
 {
     public class ElevatorsManager
@@ -9,8 +8,6 @@ namespace ElevatorSimulator.Logic
         private readonly ElevatorHandler[] _elevatorHandlers;
         private readonly Floor[] _floors;
         private readonly int _nrOfFloors;
-        private readonly object _lock = new object();
-
 
         public ElevatorsManager(
             ElevatorHandler[] elevatorHandlers,

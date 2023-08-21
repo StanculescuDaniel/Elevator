@@ -34,6 +34,14 @@ namespace ElevatorSimulator.Logic.Handlers
             _timer.Enabled = false;
         }
 
+        public void StartHandleing()
+        {
+            if (!_timer.Enabled)
+            {
+                HandleCurrentFloorAndDecideNextState();
+            }
+        }
+
         public void AddPersonToPick(Person person)
         {
             lock (_lock)
@@ -69,20 +77,6 @@ namespace ElevatorSimulator.Logic.Handlers
         }
 
         #region Private
-        public void StartHandleing()
-        {
-            if (!_timer.Enabled)
-            {
-                HandleCurrentFloorAndDecideNextState();
-            }
-            
-        }
-
-        public void Stop()
-        {
-            _timer.Enabled = false;
-        }
-
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             HandleCurrentFloorAndDecideNextState();
@@ -128,7 +122,10 @@ namespace ElevatorSimulator.Logic.Handlers
             var personsToBePickerFromCurrentFloorByThisElevator = Elevator.PersonsToBePicker.Where(p => p.StartingFloor == CurrentFloor);
             if (personsToBePickerFromCurrentFloorByThisElevator.Any())
             {
-                log.Append($"- Getting {personsToBePickerFromCurrentFloorByThisElevator.Count()} persons from floor {Elevator.CurrentFloorNr}");
+                var nrOfpersonsToBePickerFromCurrentFloor = personsToBePickerFromCurrentFloorByThisElevator.Count();
+                var freeSpots = Elevator.GetFreeSpots();
+                personsToBePickerFromCurrentFloorByThisElevator = personsToBePickerFromCurrentFloorByThisElevator.Take(freeSpots);
+                log.Append($"Getting {personsToBePickerFromCurrentFloorByThisElevator.Count()} persons from floor {Elevator.CurrentFloorNr}");
                 //insert them to elevator
                 Elevator.PersonsInElevator.AddRange(personsToBePickerFromCurrentFloorByThisElevator);
                 //remove persons from the floor
@@ -140,7 +137,7 @@ namespace ElevatorSimulator.Logic.Handlers
             var personsToBeDropedAtCurrentFloorByThisElevator = Elevator.PersonsInElevator.Where(p => p.TargetFloor == CurrentFloor);
             if (personsToBeDropedAtCurrentFloorByThisElevator.Any())
             {
-                log.Append($"- Dropping {personsToBeDropedAtCurrentFloorByThisElevator.Count()} persons at floor {Elevator.CurrentFloorNr}");
+                log.Append($"Dropping {personsToBeDropedAtCurrentFloorByThisElevator.Count()} persons at floor {Elevator.CurrentFloorNr}");
                 //remove persons from elevator
                 Elevator.PersonsInElevator.RemoveAll(p => personsToBeDropedAtCurrentFloorByThisElevator.Contains(p));
             }

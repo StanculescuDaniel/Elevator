@@ -29,30 +29,30 @@ namespace ElevatorSimulator.Logic.Tests
             Assert.That(elevator.FloorsToVisit.SequenceEqual(expetedFloorsToVisit), Is.True);
         }
 
-        [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandleingPersonsInElevator_TestCaseSource))]
-        public void TestStartHandleingPersonsInElevator(Floor[] floors, Elevator elevator, List<Person> expectedPersonsInElevator)
+        [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandlingPersonsInElevator_TestCaseSource))]
+        public void TestStartHandlingPersonsInElevator(Floor[] floors, Elevator elevator, List<Person> expectedPersonsInElevator)
         {
             //Arrages
             var handler = new ElevatorHandler(elevator, floors, _output);
 
             //Act
-            handler.StartHandleing();
+            handler.StartHandling();
 
             //Assert
             Assert.That(elevator.PersonsInElevator.SequenceEqual(expectedPersonsInElevator), Is.True);
         }
 
-        //[Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandleingTestCaseSource))]
-        public void TestStartHandleingNextState(Floor[] floors, Elevator elevator, ElevatorState expectedElevatorState)
+        [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandlingFloorsToVisit_TestCaseSource))]
+        public void TestStartHandlingNextState(Floor[] floors, Elevator elevator, List<Floor> expectedFloorsToVisit)
         {
             //Arrages
             var handler = new ElevatorHandler(elevator, floors, _output);
 
             //Act
-            handler.StartHandleing();
+            handler.StartHandling();
 
             //Assert
-            Assert.That(handler.Elevator.State, Is.EqualTo(expectedElevatorState));
+            Assert.That(elevator.FloorsToVisit.SequenceEqual(expectedFloorsToVisit), Is.True);
         }
 
     }

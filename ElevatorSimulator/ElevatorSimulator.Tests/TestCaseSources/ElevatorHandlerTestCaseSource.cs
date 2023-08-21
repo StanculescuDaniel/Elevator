@@ -1,5 +1,6 @@
 ﻿using ElevatorSimulator.Logic.Builders;
 using ElevatorSimulator.Logic.Models;
+using Microsoft.VisualBasic;
 
 namespace ElevatorSimulator.Logic.Tests.TestCaseSources
 {
@@ -328,13 +329,14 @@ namespace ElevatorSimulator.Logic.Tests.TestCaseSources
         }
         #endregion
 
-        #region StartHandleingPersonsInElevator_TestCaseSource
-        public static IEnumerable<TestCaseData> GetStartHandleingPersonsInElevator_TestCaseSource()
+        #region StartHandlingPersonsInElevator_TestCaseSource
+        public static IEnumerable<TestCaseData> GetStartHandlingPersonsInElevator_TestCaseSource()
         {
             var floors = FloorsBuilder.Build(10);
-            yield return StartHandleing_CorrectPeopleAreBeingDroppedAndPicked_TestCase(floors);
+            yield return StartHandling_CorrectPeopleAreBeingDroppedAndPicked_TestCase(floors);
+            yield return StartHandling_CorrectPeopleAreBeingPickedWithinCapacity_TestCase(floors);
         }
-        private static TestCaseData StartHandleing_CorrectPeopleAreBeingDroppedAndPicked_TestCase(Floor[] floors)
+        private static TestCaseData StartHandling_CorrectPeopleAreBeingDroppedAndPicked_TestCase(Floor[] floors)
         {
             var waitingPersonBuilder = new WaitingPersonBuilder(floors);
 
@@ -368,9 +370,94 @@ namespace ElevatorSimulator.Logic.Tests.TestCaseSources
                 TestName = "When the elevator visits a floor it will drop and pick the correct persons in that floor."
             };
         }
+        private static TestCaseData StartHandling_CorrectPeopleAreBeingPickedWithinCapacity_TestCase(Floor[] floors)
+        {
+            var waitingPersonBuilder = new WaitingPersonBuilder(floors);
+
+            var waitingPerson1 = waitingPersonBuilder.Buid(4, 5);
+            var waitingPerson2 = waitingPersonBuilder.Buid(4, 9);
+            var waitingPerson3 = waitingPersonBuilder.Buid(4, 9);
+
+            var personInElevator = new Person
+            {
+                StartingFloor = floors[0],
+                TargetFloor = floors[5]
+            };
+            var personInElevator2 = new Person
+            {
+                StartingFloor = floors[1],
+                TargetFloor = floors[5]
+            };
+
+            var elevator = new Elevator()
+            {
+                CurrentFloorNr = 4,
+                MaxCapacity = 4,
+                State = ElevatorState.MovingUp,
+                PersonsInElevator = new List<Person> { personInElevator, personInElevator2 },
+                PersonsToBePicker = new List<Person> { waitingPerson1, waitingPerson2, waitingPerson3 }
+            };
+
+            var expectedPersonsInElevator = new List<Person> { 
+                personInElevator, personInElevator2, waitingPerson1, waitingPerson2 
+            };
+
+            return new TestCaseData(floors, elevator, expectedPersonsInElevator)
+            {
+                TestName = "When the elevator visits a floor then it pick persons only within its capacity."
+            };
+        }
+
         #endregion
 
+        #region GetStartHandlingFloorsToVisit_TestCaseSource
+        public static IEnumerable<TestCaseData> GetStartHandlingFloorsToVisit_TestCaseSource()
+        {
+            var floors = FloorsBuilder.Build(10);
+            yield return GetStartHandlingFloorsToVisit_CurrentFloorDeleted(floors);
+            yield return GetStartHandlingFloorsToVisit_CurrentFloorAddedAtEndWhenElevatorFull(floors);
+        }
 
+        private static TestCaseData GetStartHandlingFloorsToVisit_CurrentFloorDeleted(Floor[] floors)
+        {
+            var elevator = new Elevator()
+            {
+                CurrentFloorNr = 4,
+                State = ElevatorState.MovingDown,
+                FloorsToVisit = new List<Floor> { floors[4], floors[0] }
+            };
+
+            var expectedFloorsToVisit = new List<Floor>() { floors[0] };
+
+            return new TestCaseData(floors, elevator, expectedFloorsToVisit)
+            {
+                TestName = "When an elevator visits a floor then it removes this floor from the FloorsToVisit array"
+            };
+        }
+
+        private static TestCaseData GetStartHandlingFloorsToVisit_CurrentFloorAddedAtEndWhenElevatorFull(Floor[] floors)
+        {
+            var waitingPersonBuilder = new WaitingPersonBuilder(floors);
+            var waitingPerson1 = waitingPersonBuilder.Buid(0, 4);
+            var waitingPerson2 = waitingPersonBuilder.Buid(0, 4);
+            var elevator = new Elevator()
+            {
+                CurrentFloorNr = 0,
+                MaxCapacity = 1,
+                State = ElevatorState.MovingUp,
+                FloorsToVisit = new List<Floor> { floors[0], floors[4] },
+                PersonsToBePicker = new List<Person> { waitingPerson1, waitingPerson2 }
+            };
+
+            var expectedFloorsToVisit = new List<Floor>() { floors[4], floors[0] };
+
+            return new TestCaseData(floors, elevator, expectedFloorsToVisit)
+            {
+                TestName = "When an elevator visits a floor then it removes this floor from the FloorsToVisit array"
+            };
+        }
+
+        #endregion
 
     }
 }

@@ -2,10 +2,6 @@
 {
     public class Floor
     {
-        public Floor()
-        {
-            
-        }
         public Floor(int nr)
         {
             FloorNr = nr;

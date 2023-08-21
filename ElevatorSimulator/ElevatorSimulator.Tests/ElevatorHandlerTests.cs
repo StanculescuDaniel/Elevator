@@ -32,7 +32,7 @@ namespace ElevatorSimulator.Logic.Tests
         [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandlingPersonsInElevator_TestCaseSource))]
         public void TestStartHandlingPersonsInElevator(Floor[] floors, Elevator elevator, List<Person> expectedPersonsInElevator)
         {
-            //Arrages
+            //Arrage
             var handler = new ElevatorHandler(elevator, floors, _output);
 
             //Act
@@ -45,7 +45,7 @@ namespace ElevatorSimulator.Logic.Tests
         [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandlingFloorsToVisit_TestCaseSource))]
         public void TestStartHandlingNextState(Floor[] floors, Elevator elevator, List<Floor> expectedFloorsToVisit)
         {
-            //Arrages
+            //Arrage
             var handler = new ElevatorHandler(elevator, floors, _output);
 
             //Act

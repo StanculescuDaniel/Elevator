@@ -13,30 +13,13 @@ namespace ElevatorSimulator.Logic.Tests.TestCaseSources
         {
             var floors = new Floor[]
             {
-                new Floor()
-                {
-                    FloorNr = 0
-                },
-                new Floor()
-                {
-                    FloorNr = 1
-                },
-                new Floor()
-                {
-                    FloorNr = 2
-                },
-                new Floor()
-                {
-                    FloorNr = 3
-                },
-                new Floor()
-                {
-                    FloorNr = 4
-                },
-                new Floor()
-                {
-                    FloorNr = 5
-                },
+                new Floor(0),
+                new Floor(1),
+                new Floor(2),
+                new Floor(3),
+                new Floor(4),
+                new Floor(5)
+                
             };
 
             yield return PickStoppedElevatorAtCurrentFloor(floors);

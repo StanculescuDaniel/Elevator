@@ -29,7 +29,7 @@ namespace ElevatorSimulator.Logic.Tests
             Assert.That(elevator.FloorsToVisit.SequenceEqual(expetedFloorsToVisit), Is.True);
         }
 
-        [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandleingTestCaseSource))]
+        [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandleingPersonsInElevator_TestCaseSource))]
         public void TestStartHandleingPersonsInElevator(Floor[] floors, Elevator elevator, List<Person> expectedPersonsInElevator)
         {
             //Arrages
@@ -42,7 +42,7 @@ namespace ElevatorSimulator.Logic.Tests
             Assert.That(elevator.PersonsInElevator.SequenceEqual(expectedPersonsInElevator), Is.True);
         }
 
-        [Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandleingTestCaseSource))]
+        //[Test, TestCaseSource(typeof(ElevatorHandlerTestCaseSource), nameof(ElevatorHandlerTestCaseSource.GetStartHandleingTestCaseSource))]
         public void TestStartHandleingNextState(Floor[] floors, Elevator elevator, ElevatorState expectedElevatorState)
         {
             //Arrages

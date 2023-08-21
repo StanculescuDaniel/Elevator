@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ElevatorSimulator.Domain\ElevatorSimulator.Logic.csproj" />
+    <ProjectReference Include="..\ElevatorSimulator.Logic\ElevatorSimulator.Logic.csproj" />
   </ItemGroup>
 
 </Project>

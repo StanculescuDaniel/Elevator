@@ -1,12 +1,12 @@
 Elevator Simulator
 
 Steps: 
-1. Provide nr of floors.
-2. Provide floor numbers where elevators are stopped.
+- Provide nr of floors.
+- Provide floor numbers where elevators are stopped.
      For eg for input: 2,4,5 the application will create 3 elevators stopped at floors 2,4 and 5.
      The number of elevators is deducted.
 	 The application assigns a color for each elevator for better console readibility
-3. Enter the persons who wait for an elevator.
+- Enter the persons who wait for an elevator.
      For eg for input: 2,9 8,0 we have 2 persons: 
        First is waiting at floor 2 and wants to go to floor 9.
        Second, is waiting on floor 8 and wants to go to floor 0.

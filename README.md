@@ -1,6 +1,6 @@
-Elevator Simulator
+##Elevator Simulator
 
-Steps: 
+###Steps: 
 - Provide nr of floors.
 - Provide floor numbers where elevators are stopped.
      For eg for input: 2,4,5 the application will create 3 elevators stopped at floors 2,4 and 5.
@@ -13,15 +13,15 @@ Steps:
      After this command, an elevator is assigned for each person and elevators will start.
 	 You can input this command while the elevators are moving.
 	 
-Video demonstration: 
+###Video demonstration: 
 ![](https://github.com/StanculescuDaniel/Elevator/blob/main/ElevatorSimulator.gif)
 
-Project structure:
+###Project structure:
 - ElevatorSimulator.ConsoleApp - the console application responsible for getting the user input and for printing the elevator state
 - ElevatorSimulator.Logic - contains the logic for the elevators. The logic is kept in a separate project so that it can be used in other types of applications.
 - ElevatorSimulator.Logic.Abstractions - contains the models and interfaces.
 - ElevatorSimulator.Logic.Tests - contains the unit tests for ElevatorSimulator.Logic project.
 
-Constants:
+###Constants:
 - The maximum capacity for an elevator is 10 persons. This value can be modified from MaxCapacity property in Elevator.cs model. 
 - The elevator process of getting from one floor to another takes 1000ms. This can be modified from TimerDuration constant in ElevatorHandler.cs.

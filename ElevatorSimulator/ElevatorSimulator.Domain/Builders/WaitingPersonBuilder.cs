@@ -1,6 +1,6 @@
-﻿using ElevatorSimulator.Domain.Models;
+﻿using ElevatorSimulator.Logic.Models;
 
-namespace ElevatorSimulator.Domain.Builders
+namespace ElevatorSimulator.Logic.Builders
 {
     public class WaitingPersonBuilder
     {
@@ -31,6 +31,18 @@ namespace ElevatorSimulator.Domain.Builders
             }
 
             return list;
+        }
+
+        public Person Buid(int startingFloor, int targetFloor)
+        {
+            var person = new Person()
+            {
+                StartingFloor = _floors[startingFloor],
+                TargetFloor = _floors[targetFloor]
+            };
+            _floors[startingFloor].WaitingPeople.Add(person);
+
+            return person;
         }
     }
 }

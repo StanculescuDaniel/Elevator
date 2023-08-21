@@ -1,6 +1,6 @@
-﻿using ElevatorSimulator.Domain.Models;
+﻿using ElevatorSimulator.Logic.Models;
 
-namespace ElevatorSimulator.Domain.Builders
+namespace ElevatorSimulator.Logic.Builders
 {
     public class FloorsBuilder
     {

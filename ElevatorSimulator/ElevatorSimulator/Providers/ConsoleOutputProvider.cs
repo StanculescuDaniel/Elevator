@@ -1,6 +1,7 @@
-﻿using ElevatorSimulator.Domain.Interface;
+﻿using ElevatorSimulator.Logic.Interface;
+using ElevatorSimulator.Logic.Models;
 
-namespace ElevatorSimulator.Domain.Providers
+namespace ElevatorSimulator.Providers
 {
     public class ConsoleOutputProvider : IOutputProvider
     {

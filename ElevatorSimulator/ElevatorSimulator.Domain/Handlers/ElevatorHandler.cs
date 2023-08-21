@@ -1,9 +1,9 @@
-﻿using ElevatorSimulator.Domain.Interface;
-using ElevatorSimulator.Domain.Models;
+﻿using ElevatorSimulator.Logic.Interface;
+using ElevatorSimulator.Logic.Models;
 using System.Text;
 using System.Timers;
 
-namespace ElevatorSimulator.Domain.Handlers
+namespace ElevatorSimulator.Logic.Handlers
 {
     public class ElevatorHandler
     {
@@ -154,7 +154,7 @@ namespace ElevatorSimulator.Domain.Handlers
             this.PrintState(log.ToString());
 
         }
-        private void PrintState(string message = null)
+        public void PrintState(string message = null)
         {
             _output.WriteLine($"{Elevator}  {message}", Elevator.ConsoleColor);
         }

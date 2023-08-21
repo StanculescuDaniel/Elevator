@@ -1,9 +1,9 @@
-﻿using ElevatorSimulator.Domain.Handlers;
-using ElevatorSimulator.Domain.Interface;
-using ElevatorSimulator.Domain.Models;
-using ElevatorSimulator.Domain.Providers;
+﻿using ElevatorSimulator.Logic.Handlers;
+using ElevatorSimulator.Logic.Interface;
+using ElevatorSimulator.Logic.Models;
+using ElevatorSimulator.Logic.Tests.Mocks;
 
-namespace ElevatorSimulator.Domain.Tests
+namespace ElevatorSimulator.Logic.Tests
 {
     public class ElevatorHandlerTests
     {
@@ -12,7 +12,7 @@ namespace ElevatorSimulator.Domain.Tests
         [SetUp]
         public void Setup()
         {
-            _output = new ConsoleOutputProvider();
+            _output = new MockOutputProvider();
         }
 
         [Test, TestCaseSource(nameof(GetAddPersonToPickTestCaseSource))]

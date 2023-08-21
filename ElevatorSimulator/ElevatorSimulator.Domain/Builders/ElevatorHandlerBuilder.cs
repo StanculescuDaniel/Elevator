@@ -1,8 +1,8 @@
-﻿using ElevatorSimulator.Domain.Handlers;
-using ElevatorSimulator.Domain.Interface;
-using ElevatorSimulator.Domain.Models;
+﻿using ElevatorSimulator.Logic.Handlers;
+using ElevatorSimulator.Logic.Interface;
+using ElevatorSimulator.Logic.Models;
 
-namespace ElevatorSimulator.Domain.Builders
+namespace ElevatorSimulator.Logic.Builders
 {
     public class ElevatorHandlerBuilder
     {
@@ -25,6 +25,7 @@ namespace ElevatorSimulator.Domain.Builders
                     Id = i,
                     CurrentFloorNr = stoppedFloors[i]
                 };
+                elevator.AutoAssignColor();
                 handlers.Add(new ElevatorHandler(elevator, _floors, _output));
             }
 

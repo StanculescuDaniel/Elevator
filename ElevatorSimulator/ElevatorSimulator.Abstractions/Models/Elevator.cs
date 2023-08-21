@@ -2,7 +2,7 @@
 using System.Text;
 using System.Timers;
 
-namespace ElevatorSimulator.Domain.Models
+namespace ElevatorSimulator.Logic.Models
 {
     public enum ElevatorState
     {
@@ -32,6 +32,20 @@ namespace ElevatorSimulator.Domain.Models
 
     public static class ElevatorExtensions
     {
+
+        private static ConsoleColor[] Colors = new ConsoleColor[]
+        {
+            ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.Yellow
+        };
+
+        public static void AutoAssignColor(this Elevator elevator)
+        {
+            if(elevator.Id < Colors.Length)
+            {
+                elevator.ConsoleColor = Colors[elevator.Id];
+            }
+        }
+
         public static bool IsMoving(this Elevator elevator)
         {
             return elevator.State != ElevatorState.Stopped;
@@ -41,35 +55,26 @@ namespace ElevatorSimulator.Domain.Models
             return elevator.PersonsInElevator.Count();
         }
 
-        public static Floor? GetNextFloorToVisit(this Elevator unit)
+        public static Floor? GetNextFloorToVisit(this Elevator elevator)
         {
-            return unit.FloorsToVisit.FirstOrDefault();
+            return elevator.FloorsToVisit.FirstOrDefault();
         }
 
-        public static Floor? GetLastFloorToVisit(this Elevator unit)
+        public static Floor? GetLastFloorToVisit(this Elevator elevator)
         {
-            return unit.FloorsToVisit.LastOrDefault();
+            return elevator.FloorsToVisit.LastOrDefault();
         }
 
-        public static Floor? GetNextFloorToStop(this Elevator unit)
+        public static void MoveUp(this Elevator elevator)
         {
-            var floorsToStopToDropPersons = unit.PersonsInElevator.Select(p => p.TargetFloor);
-            var floorsToStopToPickPersons = unit.PersonsToBePicker.Select(p => p.StartingFloor);
-
-            var allFlorsToStop = floorsToStopToDropPersons.Concat(floorsToStopToPickPersons).OrderBy(p => p.FloorNr);
-            return allFlorsToStop.FirstOrDefault();
+            elevator.CurrentFloorNr++;
+            elevator.State = ElevatorState.MovingUp;
         }
 
-        public static void MoveUp(this Elevator unit)
+        public static void MoveDown(this Elevator elevator)
         {
-            unit.CurrentFloorNr++;
-            unit.State = ElevatorState.MovingUp;
-        }
-
-        public static void MoveDown(this Elevator unit)
-        {
-            unit.CurrentFloorNr--;
-            unit.State = ElevatorState.MovingDown;
+            elevator.CurrentFloorNr--;
+            elevator.State = ElevatorState.MovingDown;
         }
     }
 }

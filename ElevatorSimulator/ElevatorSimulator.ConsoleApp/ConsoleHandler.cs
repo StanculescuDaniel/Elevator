@@ -42,7 +42,7 @@ namespace ElevatorSimulator.ConsoleApp
             var floorNrs = floorNrsStr.Select(p => int.Parse(p)).ToArray();
             if (floorNrs.Max() >= floors.Length)
             {
-                outputProvider.WriteLine($"{elevatorsStr} contains a floor which is higher than the entered of floors '{floors.Length}'");
+                outputProvider.WriteLine($"{elevatorsStr} contains a floor which is higher than the entered nr of floors '{floors.Length}'");
                 return false;
             }
 

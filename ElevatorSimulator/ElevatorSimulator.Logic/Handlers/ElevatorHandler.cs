@@ -1,4 +1,5 @@
-﻿using ElevatorSimulator.Logic.Interface;
+﻿using ElevatorSimulator.Logic.Abstractions.Extensions;
+using ElevatorSimulator.Logic.Interface;
 using ElevatorSimulator.Logic.Models;
 using System.Text;
 using System.Timers;

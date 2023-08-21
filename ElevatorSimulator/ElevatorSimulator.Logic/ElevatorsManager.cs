@@ -1,4 +1,5 @@
-﻿using ElevatorSimulator.Logic.Handlers;
+﻿using ElevatorSimulator.Logic.Abstractions.Extensions;
+using ElevatorSimulator.Logic.Handlers;
 using ElevatorSimulator.Logic.Models;
 
 namespace ElevatorSimulator.Logic

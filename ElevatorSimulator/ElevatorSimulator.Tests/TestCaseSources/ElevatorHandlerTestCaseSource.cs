@@ -1,15 +1,12 @@
-﻿using ElevatorSimulator.Logic.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ElevatorSimulator.Logic.Builders;
+using ElevatorSimulator.Logic.Models;
 
 namespace ElevatorSimulator.Logic.Tests.TestCaseSources
 {
-    public static class AddPersonToPickTestCaseSource
+    public static class ElevatorHandlerTestCaseSource
     {
-        public static IEnumerable<TestCaseData> GetTestCaseSource()
+        #region AddPersonToPickTestCaseSource
+        public static IEnumerable<TestCaseData> GetAddPersonToPickTestCaseSource()
         {
             var floors = new Floor[]
             {
@@ -329,5 +326,51 @@ namespace ElevatorSimulator.Logic.Tests.TestCaseSources
                 TestName = "When elevator is moving up, person wants to go up but starting and target floor are below the elevator then after the elevator finish with the highest target floor iw will come back to pick person"
             };
         }
+        #endregion
+
+        #region StartHandleingPersonsInElevator_TestCaseSource
+        public static IEnumerable<TestCaseData> GetStartHandleingPersonsInElevator_TestCaseSource()
+        {
+            var floors = FloorsBuilder.Build(10);
+            yield return StartHandleing_CorrectPeopleAreBeingDroppedAndPicked_TestCase(floors);
+        }
+        private static TestCaseData StartHandleing_CorrectPeopleAreBeingDroppedAndPicked_TestCase(Floor[] floors)
+        {
+            var waitingPersonBuilder = new WaitingPersonBuilder(floors);
+
+            var waitingPerson1 = waitingPersonBuilder.Buid(4, 5);
+            var waitingPerson2 = waitingPersonBuilder.Buid(4, 9);
+            var waitingPerson3 = waitingPersonBuilder.Buid(5, 9);
+
+            var personInElevator = new Person
+            {
+                StartingFloor = floors[0],
+                TargetFloor = floors[4]
+            };
+            var personInElevator2 = new Person
+            {
+                StartingFloor = floors[1],
+                TargetFloor = floors[4]
+            };
+
+            var elevator = new Elevator()
+            {
+                CurrentFloorNr = 4,
+                State = ElevatorState.MovingUp,
+                PersonsInElevator = new List<Person> { personInElevator, personInElevator2 },
+                PersonsToBePicker = new List<Person> { waitingPerson1, waitingPerson2 }
+            };
+
+            var expectedPersonsInElevator = new List<Person> { waitingPerson1, waitingPerson2 };
+
+            return new TestCaseData(floors, elevator, expectedPersonsInElevator)
+            {
+                TestName = "When the elevator visits a floor it will drop and pick the correct persons in that floor."
+            };
+        }
+        #endregion
+
+
+
     }
 }

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ElevatorSimulator.Logic.Tests.TestCaseSources
 {
-    public static class AssignBestElevatorToPersonTestCaseSource
+    public static class ElevatorsManagerTestCaseSource
     {
-        public static IEnumerable<TestCaseData> GetTestCaseSource()
+        public static IEnumerable<TestCaseData> GetAssignBestElevatorToPersonTestCaseSource()
         {
             var floors = new Floor[]
             {

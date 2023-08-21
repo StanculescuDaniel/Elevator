@@ -15,7 +15,7 @@ namespace ElevatorSimulator.Logic.Tests
             _output = new MockOutputProvider();
         }
 
-        [Test, TestCaseSource(typeof(AssignBestElevatorToPersonTestCaseSource), nameof(AssignBestElevatorToPersonTestCaseSource.GetTestCaseSource))]
+        [Test, TestCaseSource(typeof(ElevatorsManagerTestCaseSource), nameof(ElevatorsManagerTestCaseSource.GetAssignBestElevatorToPersonTestCaseSource))]
         public void TestAssignBestElevatorToPerson(Floor[] floors, Elevator[] elevators, Person person, Elevator expectedAssignedElevator)
         {
             //Arrange

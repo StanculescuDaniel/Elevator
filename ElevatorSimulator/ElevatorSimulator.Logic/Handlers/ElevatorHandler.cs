@@ -34,7 +34,7 @@ namespace ElevatorSimulator.Logic.Handlers
             _timer.Enabled = false;
         }
 
-        public void StartHandleing()
+        public void StartHandling()
         {
             if (!_timer.Enabled)
             {
@@ -118,20 +118,6 @@ namespace ElevatorSimulator.Logic.Handlers
         private void HandleCurrentFloor()
         {
             var log = new StringBuilder();
-            //take people from floor
-            var personsToBePickerFromCurrentFloorByThisElevator = Elevator.PersonsToBePicker.Where(p => p.StartingFloor == CurrentFloor);
-            if (personsToBePickerFromCurrentFloorByThisElevator.Any())
-            {
-                var nrOfpersonsToBePickerFromCurrentFloor = personsToBePickerFromCurrentFloorByThisElevator.Count();
-                var freeSpots = Elevator.GetFreeSpots();
-                personsToBePickerFromCurrentFloorByThisElevator = personsToBePickerFromCurrentFloorByThisElevator.Take(freeSpots);
-                log.Append($"Getting {personsToBePickerFromCurrentFloorByThisElevator.Count()} persons from floor {Elevator.CurrentFloorNr}");
-                //insert them to elevator
-                Elevator.PersonsInElevator.AddRange(personsToBePickerFromCurrentFloorByThisElevator);
-                //remove persons from the floor
-                CurrentFloor.WaitingPeople.RemoveAll(p => personsToBePickerFromCurrentFloorByThisElevator.Contains(p));
-                Elevator.PersonsToBePicker.RemoveAll(p => personsToBePickerFromCurrentFloorByThisElevator.Contains(p));
-            }
 
             //drop people at current floor
             var personsToBeDropedAtCurrentFloorByThisElevator = Elevator.PersonsInElevator.Where(p => p.TargetFloor == CurrentFloor);
@@ -142,10 +128,37 @@ namespace ElevatorSimulator.Logic.Handlers
                 Elevator.PersonsInElevator.RemoveAll(p => personsToBeDropedAtCurrentFloorByThisElevator.Contains(p));
             }
 
+            //take people from floor
+            var personsToBePickerFromCurrentFloor = Elevator.PersonsToBePicker.Where(p => p.StartingFloor == CurrentFloor);
+            bool allPersonsFitInElevator = true;
+            if (personsToBePickerFromCurrentFloor.Any())
+            {
+                var nrOfPersonsToBePickerFromCurrentFloor = personsToBePickerFromCurrentFloor.Count();
+                var freeSpots = Elevator.GetFreeSpots();
+                if(personsToBePickerFromCurrentFloor.Count() > Elevator.GetFreeSpots())
+                {
+                    allPersonsFitInElevator = false;
+                }
+                //take into elevator only the number of free spots
+                personsToBePickerFromCurrentFloor = personsToBePickerFromCurrentFloor.Take(freeSpots);
+                log.Append($"Getting {personsToBePickerFromCurrentFloor.Count()} persons from floor {Elevator.CurrentFloorNr}");
+                //insert them to elevator
+                Elevator.PersonsInElevator.AddRange(personsToBePickerFromCurrentFloor);
+                //remove persons from the floor
+                CurrentFloor.WaitingPeople.RemoveAll(p => personsToBePickerFromCurrentFloor.Contains(p));
+                Elevator.PersonsToBePicker.RemoveAll(p => personsToBePickerFromCurrentFloor.Contains(p));
+            }
+
             // floor has been visited
-            if (Elevator.FloorsToVisit.Any() && CurrentFloor == Elevator.FloorsToVisit.ElementAt(0))
+            var floorToVisit = Elevator.FloorsToVisit.FirstOrDefault();
+            if (floorToVisit != null && CurrentFloor == floorToVisit)
             {
                 Elevator.FloorsToVisit.RemoveAt(0);
+                // if not all people have been picked then add the floor at the end of the queue
+                if (!allPersonsFitInElevator)
+                {
+                    Elevator.FloorsToVisit.Add(floorToVisit);
+                }
             }
 
             this.PrintState(log.ToString());

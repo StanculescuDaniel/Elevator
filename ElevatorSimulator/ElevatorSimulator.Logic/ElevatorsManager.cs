@@ -6,17 +6,11 @@ namespace ElevatorSimulator.Logic
     public class ElevatorsManager
     {
         private readonly ElevatorHandler[] _elevatorHandlers;
-        private readonly Floor[] _floors;
-        private readonly int _nrOfFloors;
 
         public ElevatorsManager(
-            ElevatorHandler[] elevatorHandlers,
-            Floor[] floors)
+            ElevatorHandler[] elevatorHandlers)
         {
             _elevatorHandlers = elevatorHandlers;
-            _floors = floors;
-            _nrOfFloors = floors.Count();
-
         }
 
         public void AssignBestElevatorToPerson(Person person)
@@ -28,7 +22,7 @@ namespace ElevatorSimulator.Logic
 
             var bestElevatorHandler = GetBestElevatorHandler(person);
             bestElevatorHandler.AddPersonToPick(person);
-            bestElevatorHandler.StartHandleing();
+            bestElevatorHandler.StartHandling();
             
         }
 

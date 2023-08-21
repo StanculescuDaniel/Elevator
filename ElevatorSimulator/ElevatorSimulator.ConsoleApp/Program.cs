@@ -1,7 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿
 using ElevatorSimulator.ConsoleApp;
 using ElevatorSimulator.Logic;
 using ElevatorSimulator.Logic.Builders;
+using ElevatorSimulator.Logic.Handlers;
 using ElevatorSimulator.Logic.Models;
 using ElevatorSimulator.Providers;
 
@@ -24,22 +25,25 @@ void RunWithConsoleInput()
     var outputProvider = new ConsoleOutputProvider();
     var consoleHandler = new ConsoleHandler(outputProvider);
     
-    if(!consoleHandler.TryGetFloorsFromFromUser(out var floors))
+    Floor[] floors;
+    while(!consoleHandler.TryGetFloorsFromFromUser(out floors))
     {
-        return;
+        
     }
 
-    if(!consoleHandler.TryGetElevatorsFromUser(floors, out var elevatorHandlers))
+    ElevatorHandler[] elevatorHandlers;
+    while (!consoleHandler.TryGetElevatorsFromUser(floors, out elevatorHandlers))
     {
-        return;
+        
     }
 
-    var elevatorsManager = new ElevatorsManager(elevatorHandlers, floors);
+    var elevatorsManager = new ElevatorsManager(elevatorHandlers);
     while (true)
     {
-        if(!consoleHandler.TryGetWaitingPersonsFromUser(floors, out var waitingPersons))
+        List<Person> waitingPersons;
+        while (!consoleHandler.TryGetWaitingPersonsFromUser(floors, out waitingPersons))
         {
-            return;
+            
         }
         outputProvider.WriteLine("Assigning best elevators for persons:");
         foreach (var p in waitingPersons)
@@ -50,6 +54,7 @@ void RunWithConsoleInput()
     }
 }
 
+#region Mock for testing
 void RunMock()
 {
     var outputProvider = new ConsoleOutputProvider();
@@ -99,7 +104,7 @@ void RunMock()
         }
     };
 
-    var elevatorsManager = new ElevatorsManager(new ElevatorHandlerBuilder(outputProvider, floors).Build(elevatorPool), floors);
+    var elevatorsManager = new ElevatorsManager(new ElevatorHandlerBuilder(outputProvider, floors).Build(elevatorPool));
 
     var person = new Person
     {
@@ -129,6 +134,7 @@ void RunMock()
     elevatorsManager.AssignBestElevatorToPerson(person2);
     elevatorsManager.AssignBestElevatorToPerson(person3);
 }
+#endregion
 
 
 

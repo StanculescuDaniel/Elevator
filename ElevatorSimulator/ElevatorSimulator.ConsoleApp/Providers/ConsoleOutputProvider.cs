@@ -1,5 +1,4 @@
 ﻿using ElevatorSimulator.Logic.Interface;
-using ElevatorSimulator.Logic.Models;
 
 namespace ElevatorSimulator.Providers
 {

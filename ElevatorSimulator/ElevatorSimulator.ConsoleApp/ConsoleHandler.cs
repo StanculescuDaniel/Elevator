@@ -30,7 +30,7 @@ namespace ElevatorSimulator.ConsoleApp
         public bool TryGetElevatorsFromUser(Floor[] floors, out ElevatorHandler[] elevatorHandlers)
         {
             elevatorHandlers = Array.Empty<ElevatorHandler>();
-            outputProvider.Write("Enter floor numbers where elevators are stopped separated by comma (eg: 2,3,3,6,7): ");
+            outputProvider.WriteLine("Enter floor numbers where elevators are stopped separated by comma (eg: 2,3,3,6,7): ");
             var elevatorsStr = Console.ReadLine();
             if (string.IsNullOrEmpty(elevatorsStr))
             {
@@ -40,9 +40,10 @@ namespace ElevatorSimulator.ConsoleApp
 
             var floorNrsStr = elevatorsStr.Split(',');
             var floorNrs = floorNrsStr.Select(p => int.Parse(p)).ToArray();
-            if (floorNrs.Max() > floors.Length)
+            if (floorNrs.Max() >= floors.Length)
             {
                 outputProvider.WriteLine($"{elevatorsStr} contains a floor which is higher than the entered of floors '{floors.Length}'");
+                return false;
             }
 
             var elevatorBuilder = new ElevatorHandlerBuilder(outputProvider, floors);
@@ -61,7 +62,7 @@ namespace ElevatorSimulator.ConsoleApp
         public bool TryGetWaitingPersonsFromUser(Floor[] floors, out List<Person> list)
         {
             list = new List<Person>();
-            outputProvider.Write("Enter waiting persons by entering their current and target floor separated by comma. Persons are separated by space. (Eg. 1,5 2,4 3,5):");
+            outputProvider.WriteLine("Enter waiting persons by entering their current and target floor separated by comma. Persons are separated by space. (Eg. 1,5 2,4 3,5). You can also enter these values while elevators start to move:");
             var consoleInput = Console.ReadLine();
             if (string.IsNullOrEmpty(consoleInput))
             {
@@ -85,6 +86,13 @@ namespace ElevatorSimulator.ConsoleApp
                    !int.TryParse(splittedPersonStr[1], out var targetFloor))
                 {
                     outputProvider.WriteLine($"{splittedPersonStr} is not valid");
+                    return false;
+                }
+
+                if(startingFloor >= floors.Length ||
+                   targetFloor >= floors.Length)
+                {
+                    outputProvider.WriteLine($"Max floor number is {floors.Length - 1}");
                     return false;
                 }
                 

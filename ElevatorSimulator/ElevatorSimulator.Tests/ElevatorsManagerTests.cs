@@ -20,7 +20,7 @@ namespace ElevatorSimulator.Logic.Tests
         {
             //Arrange
             var elevatorHandlers = new ElevatorHandlerBuilder(_output, floors).Build(elevators);
-            var elevatorsManager = new ElevatorsManager(elevatorHandlers, floors);
+            var elevatorsManager = new ElevatorsManager(elevatorHandlers);
 
             //Act
             elevatorsManager.AssignBestElevatorToPerson(person);

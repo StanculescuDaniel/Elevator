@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.Logic", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.Logic.Abstractions", "ElevatorSimulator.Logic.Abstractions\ElevatorSimulator.Logic.Abstractions.csproj", "{EBB5C9F1-2CD9-4B72-B2AB-164190B21088}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.ConsoleApp.Display", "ElevatorSimulator.ConsoleApp.Display\ElevatorSimulator.ConsoleApp.Display.csproj", "{15796F04-06C2-4861-8963-893BF5CA5CA5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{EBB5C9F1-2CD9-4B72-B2AB-164190B21088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBB5C9F1-2CD9-4B72-B2AB-164190B21088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBB5C9F1-2CD9-4B72-B2AB-164190B21088}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15796F04-06C2-4861-8963-893BF5CA5CA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15796F04-06C2-4861-8963-893BF5CA5CA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15796F04-06C2-4861-8963-893BF5CA5CA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15796F04-06C2-4861-8963-893BF5CA5CA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
